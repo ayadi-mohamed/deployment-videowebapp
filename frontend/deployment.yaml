@@ -4,7 +4,7 @@ metadata:
   name: videos-web
   namespace: frontend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: videos-web
@@ -27,10 +27,10 @@ spec:
         resources:
           requests:
             memory: "500Mi"
-            cpu: "250m"
+            cpu: "125m"
           limits:
             memory: "500Mi"
-            cpu: "500m"
+            cpu: "250m"
         readinessProbe:
           httpGet:
             path: /index.php
