@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playlist-api
+  namespace: microservices
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: playlist-api
+  template:
+    metadata:
+      labels:
+        app: playlist-api
+    spec:
+      serviceAccountName: playlist-api-sa
+      initContainers:
+        - name: data-seed
+          image: oumaymacharrad/data-seed-job:1.0.7@sha256:9ebb42c86a8e492decc9d285e2622e77677f4b16d6d1b8ba20218416075224e4
+          resources:
+            limits:
+              memory: "100Mi"
+              cpu: "100m"
+            requests:
+              memory: "75Mi"
+              cpu: "75m"
+          envFrom:
+            - configMapRef:
+                name: data-seed-env
+          env:
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: playlist-api-secret
+                  key: PASSWORD
+      containers:
+        - name: playlist-api-container
+          image: oumaymacharrad/playlist-microservice:1.0.8@sha256:338143b5be16a0e00906ab21ec5cb4120972279bcde6ab1e9b142aa6a4f91bd4 
+          ports:
+            - containerPort: 10010
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "0.5"
+            limits:
+              memory: "500Mi"
+              cpu: "1"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 10010
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 10010
+          envFrom:
+            - configMapRef:
+                name: playlist-env
+          env:
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: playlist-api-secret
+                  key: PASSWORD
+

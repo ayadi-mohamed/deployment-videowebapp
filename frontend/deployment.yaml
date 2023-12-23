@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videos-web
+  namespace: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: videos-web
+  template:
+    metadata:
+      labels:
+        app: videos-web
+    spec:
+      containers:
+      - name: videos-web-container
+        image: oumaymacharrad/videos-webapp@sha256:81a02732c952a7b098174632ec578dcf50502076f3ac536cb10241941091f1e9
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "0.5"
+          limits:
+            memory: "500Mi"
+            cpu: "1"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+
+

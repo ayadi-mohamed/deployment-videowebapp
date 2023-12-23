@@ -1,0 +1,16 @@
+jaeger:
+  query:
+    service:
+      type: LoadBalancer
+  provisionDataStore:
+    kafka: false
+    cassandra: false
+    elasticsearch: false
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      host: elastic.monitoring
+      port: 9200
+      existingSecret: jaeger-elastic-secret
+      existingSecretKey: password
+      user: elastic
