@@ -27,17 +27,17 @@ spec:
         resources:
           requests:
             memory: "500Mi"
-            cpu: "0.5"
+            cpu: "250m"
           limits:
             memory: "500Mi"
-            cpu: "1"
+            cpu: "500m"
         readinessProbe:
           httpGet:
-            path: /
+            path: /index.php
             port: 80
         envFrom:
             - configMapRef:
-                name: front-end-env
+                name: frontend-env
         securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false

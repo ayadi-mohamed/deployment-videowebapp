@@ -1,10 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: playlist-env
+  name: videos-env
   namespace: microservices
 data:
   ENVIRONMENT: DEBUG
   REDIS_HOST: videowebapp.redis.cache.windows.net
   REDIS_PORT: "6379"
+  FLAKY: "false"
+  JAEGER_ENDPOINT: http://jaeger-collector.jaeger:14268/api/traces
+
 
