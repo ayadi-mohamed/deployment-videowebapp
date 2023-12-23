@@ -1,0 +1,37 @@
+global:
+  env: prod
+elasticsearch:
+  clusterName: "fluentbit"
+  nameOverride: elastic
+  fullnameOverride: elastic
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  # Change it in multi-node cluster
+  replicas: 1
+  minimumMasterNodes: 1
+  # Change it to "hard" in production
+  antiAffinity: "soft"
+  # Request smaller persistent volumes.
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    storageClassName: "elastic-sc"
+    resources:
+      requests:
+        storage: 10Gi
+  extraEnvs:
+    - name: "xpack.security.enabled"
+      value: "true"
+    - name: "xpack.security.transport.ssl.enabled"
+      value: "true"
+  envFrom:
+    - secretRef:
+        name: elastic-secret
+  # Shrink default JVM heap.
+  esJavaOpts: "-Xmx256m -Xms256m"
+  # Allocate smaller chunks of memory per pod.
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"

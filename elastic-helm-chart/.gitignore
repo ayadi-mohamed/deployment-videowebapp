@@ -1,0 +1,3 @@
+.idea
+elastic-helm-chart/charts
+elastic-helm-chart/templates/secret.yaml
