@@ -4,16 +4,21 @@ metadata:
   name: playlist-api
   namespace: microservices
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: playlist-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+
   template:
     metadata:
       labels:
         app: playlist-api
     spec:
-      serviceAccountName: playlist-api-sa
       initContainers:
         - name: data-seed
           image: oumaymacharrad/data-seed-job:1.0.7@sha256:9ebb42c86a8e492decc9d285e2622e77677f4b16d6d1b8ba20218416075224e4
@@ -42,10 +47,10 @@ spec:
           resources:
             requests:
               memory: "500Mi"
-              cpu: "0.5"
+              cpu: "250m"
             limits:
               memory: "500Mi"
-              cpu: "1"
+              cpu: "500m"
           readinessProbe:
             httpGet:
               path: /healthz

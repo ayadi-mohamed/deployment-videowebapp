@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-seed-env
+  namespace: microservices
+data:
+  MICROSERVICE: playlist
+  REDIS_HOST: videowebapp.redis.cache.windows.net
+  REDIS_PORT: "6379"
+

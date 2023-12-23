@@ -8,6 +8,12 @@ spec:
   selector:
     matchLabels:
       app: videos-web
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+
   template:
     metadata:
       labels:
@@ -15,7 +21,7 @@ spec:
     spec:
       containers:
       - name: videos-web-container
-        image: oumaymacharrad/videos-webapp@sha256:81a02732c952a7b098174632ec578dcf50502076f3ac536cb10241941091f1e9
+        image: oumaymacharrad/videos-webapp:1.0.5@sha256:81a02732c952a7b098174632ec578dcf50502076f3ac536cb10241941091f1e9
         ports:
         - containerPort: 80
         resources:
@@ -29,6 +35,9 @@ spec:
           httpGet:
             path: /
             port: 80
+        envFrom:
+            - configMapRef:
+                name: front-end-env
         securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false
